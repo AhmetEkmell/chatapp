@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 14.2.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "chatapp": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "chatapp2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "chatapp3": {
+      "developmentClient": true
+    },
+    "chatapp4": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {}
+  }
+}
