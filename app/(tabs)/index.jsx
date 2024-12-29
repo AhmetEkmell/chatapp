@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput, TouchableOpacity, View, Text } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useSocket } from "../../context/SocketContext";
 

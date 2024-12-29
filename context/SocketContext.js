@@ -6,7 +6,7 @@ const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [ipAddress, setIpAddress] = useState("http://localhost:8787");
+  const [ipAddress, setIpAddress] = useState("http://192.168.1.13:8787");
 
   useEffect(() => {
     if (socket) {
@@ -22,14 +22,19 @@ export const SocketProvider = ({ children }) => {
     return () => {
       if (socket) {
         socket.disconnect();
+        setIsConnected(false);
       }
     };
   }, [socket]);
 
   const connectSocket = (address) => {
-    const newSocket = io(address);
-    setSocket(newSocket);
-    setIpAddress(address);
+    try {
+      const newSocket = io(address);
+      setSocket(newSocket);
+      setIpAddress(address);
+    } catch (e) {
+      alert(`Socket bağlantısı yapılamıyor: `, e);
+    }
   };
 
   return (
