@@ -1,20 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import * as Notifications from "expo-notifications";
+
+import { prepareNotifications } from "../lib/notifications";
 import { useSocket } from "../context/SocketContext";
 
 const ChatRoom = () => {
-  const { room, username } = useLocalSearchParams();
   const { socket } = useSocket();
+  const { room, username } = useLocalSearchParams();
+  
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [typingUsers, setTypingUsers] = useState([]);
 
   useEffect(() => {
+    prepareNotifications();
+  }, []);
+
+  useEffect(() => {
     if (!socket) return;
 
-    socket.on("receive_message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+    socket.on("receive_message", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+
+      if (data?.username !== username) {
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: `${data.username} yeni bir mesaj gönderdi`,
+            body: data?.message || null,
+          },
+          trigger: null,
+        });
+      }
     });
 
     socket.on("user_typing", (data) => {
